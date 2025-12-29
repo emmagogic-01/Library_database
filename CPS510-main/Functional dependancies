@@ -1,0 +1,93 @@
+pAuthor :
+author_id → author_name
+
+2. Category
+category_id → category_name
+
+3. Publisher
+publisher_id → publisher_name
+
+4. Patron
+patron_id → patron_name, patron_surname, patron_email
+patron_email → patron_id
+
+5. Book
+book_id → title, category_id
+category_id → category_name 
+
+6. Book_Author 
+{book_id, author_id} → (book_id, author_id) 
+
+7. Book_Copy
+copy_id → year_published, publisher_id, book_id
+book_id → category_id (inferred from Book table)
+
+8. Checkout
+checkout_id → start_time, end_time, book_id, copy_id, patron_id, is_returned
+book_id → category_id 
+patron_id → patron_name, patron_surname 
+
+9. Hold
+hold_id → start_time, end_time, patron_id, copy_id
+patron_id → patron_name, patron_surname 
+
+10. Waitlist 
+{book_id, patron_id} → (book_id, patron_id) 
+
+11. Notification
+notification_id → time_sent, notification_type, patron_id
+patron_id → patron_name, patron_surname (from Patron table)
+
+
+--TRANSITIVE & PARTIAL DEPENDANCIES----------------
+
+TRANSITIVE DEPENDENCY EXAMPLE:
+in the Checkout table:
+checkout_id → book_id and book_id → category_id imply:
+checkout_id → category_id 
+
+COMPOUND PRIMARY KEY & PARTIAL DEPENDENCY EXAMPLE:
+in the Book_Copy table:
+{copy_id, book_id} → category_id
+partial dependency:
+{book_id} → category_id
+category_id only depends on part of the compound primary key (book_id), rather than the whole primary key. 
+
+
+--TABLE DECOMPOSITION------------------------------
+
+DECOMPOSITION TO 2NF for Checkout table:
+Checkout(checkout_id, start_time, end_time, book_id, copy_id, patron_id, is_returned)
+Book_Category(book_id, category_id)
+
+DECOMPOSITION TO 3NF for Checkout table:
+Checkout(checkout_id, start_time, end_time, book_id, copy_id, patron_id, is_returned)
+Book_Category(book_id, category_id)
+Patron_Details(patron_id, patron_name, patron_surname)
+
+DECOMPOSITION TO 3NF for Hold table:
+Hold(hold_id, start_time, end_time, patron_id, copy_id)
+Patron_Details(patron_id, patron_name, patron_surname)
+
+
+---All tables converted to BCNF----------------
+--The tables already in BCNF: Book, Author, Category, Publisher, Book_Author, Waitlist, Notification
+
+Patron(patron_id, patron_name, patron_surname)
+Patron_Email(patron_email, patron_id)
+
+Book_Copy(copy_id, year_published, publisher_id, book_id)
+Book_Category(book_id, category_id)
+
+Checkout(checkout_id, start_time, end_time, book_id, copy_id, patron_id, is_returned)
+Patron_Details(patron_id, patron_name, patron_surname)
+
+Hold(hold_id, start_time, end_time, patron_id, copy_id)
+Patron_Details(patron_id, patron_name, patron_surname)
+
+
+
+
+
+
+
