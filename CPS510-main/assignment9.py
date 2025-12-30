@@ -10,8 +10,8 @@ dsn = cx_Oracle.makedsn(
 )
 
 conn = cx_Oracle.connect(
-    user="hkhambat",
-    password="06179254",
+    user="******",
+    password="******",
     dsn=dsn
 )
 cur = conn.cursor()
